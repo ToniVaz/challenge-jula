@@ -35,7 +35,8 @@
     "react-scripts": "3.4.1",
     "react-select-search": "^3.0.9",
     "react-tippy": "^1.4.0",
-    "storybook": "^5.3.18"
+    "storybook": "^5.3.18",
+    "styled-components": "^5.3.5"
   },
   "scripts": {
     "start": "chmod +x ./env.sh && ./env.sh && cp env-config.js ./public/ && react-scripts start",

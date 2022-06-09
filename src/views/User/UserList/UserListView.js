@@ -1,66 +1,208 @@
-import React, { useState, useEffect } from 'react';
-import { withTranslation } from 'react-i18next';
+import React, { useState, useEffect } from "react";
+import { withTranslation } from "react-i18next";
+import styled from "styled-components";
+import "./styles.scss";
 
-import { UserService } from 'services/UserService';
-import useRequest from 'hooks/useRequest';
+const ContainerCard = styled.div`
+  width: 1040px;
+  height: 530px;
+  box-shadow: 0px 3px 6px #00000029;
+  border-radius: 30px;
+  background-color: white;
+  opacity: 1;
+  padding-left: 62px;
+  padding-right: 62px;
+  padding-top: 35px;
+  padding-bottom: 35px;
+`;
+const CardTitle = styled.h3`
+  color: #542f61;
+  font-size: 23px;
+`;
+const CardTextDescription = styled.p`
+  color: #a8a8a8;
+  font-size: 15px;
+  font-weight: 200;
+`;
 
-import List from 'components/templates/List';
-import User from "models/User";
+const Card = styled.div`
+  width: 298px;
+  height: 284px;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 38px;
+  padding-top: 17px;
+`;
 
-import './styles.scss';
+const CardData = ({ title, subtitle, description, textButton }) => {
+  return (
+    <>
+      <Card>
+        <BoxTitle>{title}</BoxTitle>
+        <BoxTitleTwo>{subtitle}</BoxTitleTwo>
+        <CardTextTwo>{description}</CardTextTwo>
+        <Button>{textButton}</Button>
+      </Card>
+    </>
+  );
+};
+
+const CardBox = ({ title, description, subtitle, children }) => {
+  return (
+    <ContainerCard>
+      <CardTitle>{title}</CardTitle>
+      <CardTextDescription>
+        {subtitle}
+        <br></br>
+        {description}
+      </CardTextDescription>
+      {children}
+    </ContainerCard>
+  );
+};
+
+const BoxTitle = styled.h2`
+  color: #18a48c;
+  font-size: 61px;
+`;
+const BoxTitleTwo = styled.h2`
+  color: #18a48c;
+  font-size: 26px;
+  letter-spacing: 4.6px;
+`;
+const CardTextTwo = styled.p`
+  color: #a8a8a8;
+  font-size: 15px;
+  font-weight: 200;
+`;
+
+const Button = styled.button`
+  width: 184px;
+  height: 41px;
+  border: 2px solid #542f61;
+  border-radius: 30px;
+`;
+
+const BodyContainer = styled.div`
+  width: 100%;
+  padding-left: 93px;
+  padding-top: 76px;
+  padding-right: 91px;
+  padding-bottom: 108px;
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+`;
+const ListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ListItemContainer = styled.div`
+  width: 349px;
+  height: 39px;
+  background-color: white;
+  box-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+  padding-left: 30px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 23px;
+`;
+
+const ListItemText = styled.h3`
+  color: #844797;
+  font-size: 20px;
+`;
+
+const ListItem = ({ text }) => {
+  return (
+    <ListItemContainer>
+      <ListItemText>{`> ${text}`}</ListItemText>
+    </ListItemContainer>
+  );
+};
+
+const TextNotification = styled.h3`
+  color: white;
+  font-size: 23px;
+`;
+
+const BarNotification = styled.div`
+  height: 65px;
+  width: 100%;
+  background-color: #18a48c;
+  padding-left: 105px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+`;
+const HeaderContainer = styled.div`
+  height: 177px;
+  width: 100%;
+  background-color: #f7f7f7;
+`;
+
+const Header = () => {
+  return (
+    <>
+      <HeaderContainer>
+        <h1>Logo</h1>
+      </HeaderContainer>
+      <BarNotification>
+        <TextNotification>
+          {"Te quedan 22 días de tu subscripción gratuita."}
+        </TextNotification>
+      </BarNotification>
+    </>
+  );
+};
 
 const UserListView = (props) => {
-    const {
-        beforeSubmit, afterSubmit,
-        dealWithError
-    } = useRequest();
-    
-    const [users, setUsers] = useState();
-    const [hasMore, setHasMore] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [lastPage, setLastPage] = useState(1);
-
-    useEffect(() => {
-        beforeSubmit();
-        UserService.users(currentPage).then(data => {
-            console.log(data.data);
-            setCurrentPage(data.current_page);
-            setLastPage(data.last_page);
-            setCurrentPage(currentPage + 1);
-
-            setUsers(data.data.map(i => new User(i)));
-            afterSubmit();
-        }).catch((error) => {
-            afterSubmit();
-            dealWithError(error, '');
-        });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    const fetchMoreData = () => {
-        setTimeout(() => {
-            if (currentPage > lastPage) {
-                setHasMore(false);
-                return;
-            }
-        }, 1500);
-
-        setCurrentPage(currentPage + 1);
-
-        setTimeout(() => {
-            beforeSubmit();
-            UserService.users(currentPage, 5).then(data => {
-                console.log(data.data);
-
-                setUsers(users.concat(data.data.map(i => new User(i))));
-                afterSubmit();
-            }).catch((error) => {
-                afterSubmit();
-                dealWithError(error, '');
-            });
-        }, 1500);
-    };
-
-    return <List title={"Users"} elements={users} hasMore={hasMore} fetchMoreData={fetchMoreData} showLinks={true}></List>
-}
+  const data = [
+    {
+      title: "30",
+      subtitle: "dias",
+      description: "Accedé a todas las analíticas de JudIT por 30 días.",
+      textButton: "COMPRAR PLAN",
+    },
+    {
+        title: "30",
+        subtitle: "dias",
+        description: "Accedé a todas las analíticas de JudIT por 30 días.",
+        textButton: "COMPRAR PLAN",
+      },  {
+        title: "30",
+        subtitle: "dias",
+        description: "Accedé a todas las analíticas de JudIT por 30 días.",
+        textButton: "COMPRAR PLAN",
+      },
+  ];
+  return (
+    <>
+      <Header />
+      <BodyContainer>
+        <ListContainer>
+          <ListItem text={"Mis datos"} />
+          <ListItem text={"Mi subscripción"} />
+          <ListItem text={"Cambiar Contraseña"} />
+        </ListContainer>
+        <CardBox
+          title={"Mi subscripción"}
+          subtitle={
+            "Actualmente estás dentro de los 30 días de subscripción gratuita"
+          }
+          description={" Días restantes: 22"}
+        >
+          {data?.map((item) => {
+            return <CardData {...{ ...item }} />;
+          })}
+        </CardBox>
+      </BodyContainer>
+    </>
+  );
+};
 
 export default withTranslation()(UserListView);
